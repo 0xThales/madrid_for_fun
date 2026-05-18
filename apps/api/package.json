@@ -1,0 +1,16 @@
+{
+  "name": "@madrid-for-fun/api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/server.js",
+    "start": "node src/server.js",
+    "test": "node --test",
+    "export:glorp": "node scripts/export-glorp-events.js"
+  },
+  "dependencies": {
+    "@hono/node-server": "^2.0.3",
+    "hono": "^4.12.19"
+  }
+}

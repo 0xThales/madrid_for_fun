@@ -1,73 +1,64 @@
-# React + TypeScript + Vite
+# Madrid For Fun Fullstack
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Teaching monorepo for a React bootcamp project.
 
-Currently, two official plugins are available:
+The backend is a ready-made Hono API with Madrid events and plan-generation
+endpoints. The frontend is intentionally not wired to it yet, so students can
+practice implementing the API integration themselves.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Structure
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```txt
+apps/
+  api/    # Hono API, Swagger/OpenAPI docs, JSON dataset, tests
+  web/    # React + Vite app shell
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Commands
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev
+npm test
+npm run check
 ```
+
+API docs:
+
+- `http://localhost:4000/docs`
+- `http://localhost:4000/openapi.json`
+- `http://localhost:4000/api/health`
+
+Frontend dev server:
+
+- `http://localhost:5173`
+
+During class, use `npm run dev` from the repo root. It starts both:
+
+- API: `http://localhost:4000`
+- Web: `http://localhost:5173`
+
+You can still run them separately with `npm run dev:api` and `npm run dev:web`
+if you want two terminals.
+
+## Frontend/API Boundary
+
+The web app has a Vite dev proxy for `/api` and `/openapi.json`, pointing to
+`http://localhost:4000` by default. That means a future frontend service can use
+relative URLs like `/api/events`.
+
+No frontend API client, fetch wrapper, React hook, or page-level fetch has been
+implemented yet. `apps/web/src/services/` is intentionally still a placeholder.
+
+## Student Integration Exercise
+
+When you are ready to teach the FE-BE connection, the intended path is:
+
+1. Run the project with `npm run dev`.
+2. Open the web app at `http://localhost:5173`.
+3. Open `http://localhost:4000/docs` to inspect the API.
+4. Create a frontend service file inside `apps/web/src/services/`.
+5. Use relative URLs from the web app, for example `/api/events?limit=6`.
+6. Replace the placeholder pages with loading, error, empty, and success states.
+
+The infrastructure is ready, but the exercise code is deliberately not written.
