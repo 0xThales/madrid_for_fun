@@ -1,6 +1,6 @@
 # Madrid For Fun API
 
-A small backend for the bootcamp React project.
+A small TypeScript/Hono backend for the bootcamp React project.
 
 The idea: students build a frontend that helps people find fun Madrid plans. This API gives them real-ish event data adapted from Glorp Explorer, without making the class depend on Glorp internals, Turso, auth, or scrapers.
 
@@ -35,15 +35,16 @@ Open:
 
 ```txt
 src/
-  app.js                 # Hono app factory used by server and tests
-  server.js              # Local Hono Node runtime entrypoint
+  app.ts                 # Hono app factory used by server and tests
+  server.ts              # Local Hono Node runtime entrypoint
   config/                # Environment defaults and parsing
   docs/                  # OpenAPI spec
   repositories/          # Data loading and normalization
   routes/                # Hono route wiring
   services/              # Business logic for events, metadata, and plans
+  types.ts               # Shared backend domain types
   utils/                 # Date, query, and pagination helpers
-test/                    # Node test suite
+test/                    # TypeScript Node test suite
 data/events.json         # Frozen teaching dataset
 scripts/                 # Dataset export utilities
 ```
@@ -63,7 +64,7 @@ npm test
 
 Use this to build onboarding options and filters.
 
-```js
+```ts
 const res = await fetch("http://localhost:3001/api/meta");
 const meta = await res.json();
 ```
@@ -92,7 +93,7 @@ GET /api/events?q=teatro
 
 React example:
 
-```js
+```ts
 const res = await fetch("http://localhost:3001/api/events?when=weekend&limit=6");
 const json = await res.json();
 setEvents(json.data);
@@ -129,7 +130,7 @@ GET /api/plans?mood=free&budget=free
 
 Useful after onboarding. Send preferences in the request body.
 
-```js
+```ts
 const res = await fetch("http://localhost:3001/api/plans", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
@@ -148,7 +149,7 @@ setPlans(json.data);
 
 ## Event Shape
 
-```js
+```ts
 {
   id: 135,
   title: "Cinefórum Esqueria...",

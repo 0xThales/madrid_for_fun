@@ -1,6 +1,8 @@
-import { getReferenceDate } from "../config/env.js";
+import { getReferenceDate } from "../config/env";
+import type { DateRange, QueryParamValue } from "../types";
+import { firstQueryValue } from "./query";
 
-export function parseDateOnly(value) {
+export function parseDateOnly(value: string | undefined): Date | null {
   if (!value) {
     return null;
   }
@@ -9,41 +11,45 @@ export function parseDateOnly(value) {
   return Number.isNaN(parsed.getTime()) ? null : parsed;
 }
 
-export function getDateRange(when, referenceDate = getReferenceDate()) {
+export function getDateRange(
+  when: QueryParamValue,
+  referenceDate = getReferenceDate()
+): DateRange {
   const start = parseDateOnly(referenceDate);
+  const normalizedWhen = firstQueryValue(when);
 
   if (!start) {
     return {};
   }
 
-  const addDays = (date, days) => {
+  const addDays = (date: Date, days: number) => {
     const next = new Date(date);
     next.setUTCDate(next.getUTCDate() + days);
     return next;
   };
 
-  if (when === "today") {
+  if (normalizedWhen === "today") {
     return { from: start, to: addDays(start, 1) };
   }
 
-  if (when === "tomorrow") {
+  if (normalizedWhen === "tomorrow") {
     return { from: addDays(start, 1), to: addDays(start, 2) };
   }
 
-  if (when === "weekend") {
+  if (normalizedWhen === "weekend") {
     const day = start.getUTCDay();
     const daysUntilSaturday = (6 - day + 7) % 7;
     const saturday = addDays(start, daysUntilSaturday);
     return { from: saturday, to: addDays(saturday, 2) };
   }
 
-  if (when === "week") {
+  if (normalizedWhen === "week") {
     return { from: start, to: addDays(start, 7) };
   }
 
   return {};
 }
 
-export function toIsoDate(date) {
+export function toIsoDate(date: Date | undefined): string | undefined {
   return date ? date.toISOString().slice(0, 10) : undefined;
 }

@@ -11,10 +11,11 @@
     "dev:api": "npm run dev -w @madrid-for-fun/api",
     "dev:web": "npm run dev -w @madrid-for-fun/web",
     "start:api": "npm run start -w @madrid-for-fun/api",
+    "typecheck:api": "npm run typecheck -w @madrid-for-fun/api",
     "build:web": "npm run build -w @madrid-for-fun/web",
     "lint:web": "npm run lint -w @madrid-for-fun/web",
     "test": "npm run test -w @madrid-for-fun/api",
-    "check": "npm run test -w @madrid-for-fun/api && npm run build -w @madrid-for-fun/web",
+    "check": "npm run typecheck -w @madrid-for-fun/api && npm run test -w @madrid-for-fun/api && npm run build -w @madrid-for-fun/web",
     "export:glorp": "npm run export:glorp -w @madrid-for-fun/api"
   },
   "devDependencies": {

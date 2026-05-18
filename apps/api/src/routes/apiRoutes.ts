@@ -1,6 +1,13 @@
 import { Hono } from "hono";
+import type { EventService, MetaService, PlanPreferences, PlanService } from "../types";
 
-export function createApiRouter({ eventService, metaService, planService }) {
+type ApiRouterDependencies = {
+  eventService: EventService;
+  metaService: MetaService;
+  planService: PlanService;
+};
+
+export function createApiRouter({ eventService, metaService, planService }: ApiRouterDependencies) {
   const router = new Hono();
 
   router.get("/health", (context) => {
@@ -40,7 +47,7 @@ export function createApiRouter({ eventService, metaService, planService }) {
   });
 
   router.post("/plans", async (context) => {
-    const body = await context.req.json().catch(() => ({}));
+    const body = await context.req.json<PlanPreferences>().catch(() => ({}));
 
     return context.json(planService.generateFromBody(body));
   });

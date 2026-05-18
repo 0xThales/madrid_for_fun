@@ -1,15 +1,18 @@
-import { getDateRange } from "../utils/date.js";
-import { paginate } from "../utils/pagination.js";
-import { includesText, parseBoolean, parseCsv } from "../utils/query.js";
+import type { Event, EventService, QueryParams } from "../types";
+import { getDateRange } from "../utils/date";
+import { paginate } from "../utils/pagination";
+import { firstQueryValue, includesText, parseBoolean, parseCsv } from "../utils/query";
 
-export function filterEvents(events, query) {
+export function filterEvents(events: Event[], query: QueryParams): Event[] {
   const categories = parseCsv(query.category || query.categories);
   const districts = parseCsv(query.district || query.districts);
   const free = parseBoolean(query.free);
-  const search = query.q ? String(query.q).trim().toLowerCase() : "";
+  const search = firstQueryValue(query.q)?.trim().toLowerCase() || "";
   const range = getDateRange(query.when);
-  const from = query.from ? new Date(query.from) : range.from;
-  const to = query.to ? new Date(query.to) : range.to;
+  const fromValue = firstQueryValue(query.from);
+  const toValue = firstQueryValue(query.to);
+  const from = fromValue ? new Date(fromValue) : range.from;
+  const to = toValue ? new Date(toValue) : range.to;
 
   return events.filter((event) => {
     const startsAt = new Date(event.startsAt);
@@ -18,7 +21,7 @@ export function filterEvents(events, query) {
       return false;
     }
 
-    if (districts.length > 0 && !districts.includes(event.venue.district)) {
+    if (districts.length > 0 && (!event.venue.district || !districts.includes(event.venue.district))) {
       return false;
     }
 
@@ -48,11 +51,11 @@ export function filterEvents(events, query) {
   });
 }
 
-export function createEventService(events) {
+export function createEventService(events: Event[]): EventService {
   return {
     list(query) {
       const filtered = filterEvents(events, query).sort((a, b) => {
-        return new Date(a.startsAt) - new Date(b.startsAt);
+        return new Date(a.startsAt).getTime() - new Date(b.startsAt).getTime();
       });
 
       return paginate(filtered, query);

@@ -1,9 +1,15 @@
-export function createMetaService(events, referenceDate) {
+import type { Event, MetaService } from "../types";
+
+export function createMetaService(events: Event[], referenceDate: string): MetaService {
   return {
     getMeta() {
       const categories = [...new Set(events.map((event) => event.category))].sort();
       const districts = [
-        ...new Set(events.map((event) => event.venue.district).filter(Boolean))
+        ...new Set(
+          events
+            .map((event) => event.venue.district)
+            .filter((district): district is string => Boolean(district))
+        )
       ].sort();
 
       return {

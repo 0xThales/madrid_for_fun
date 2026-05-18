@@ -1,6 +1,15 @@
-import { filterEvents } from "./eventService.js";
+import type { Event, Plan, PlanPreferences, PlanService, QueryParams } from "../types";
+import { firstQueryValue } from "../utils/query";
+import { filterEvents } from "./eventService";
 
-const MOOD_RULES = {
+type MoodRule = {
+  title: string;
+  categories: string[];
+  description: string;
+  free?: boolean;
+};
+
+const MOOD_RULES: Record<string, MoodRule> = {
   cultural: {
     title: "Cultural afternoon",
     categories: ["exhibition", "theater", "cinema", "dance"],
@@ -34,7 +43,7 @@ const MOOD_RULES = {
   }
 };
 
-function eventScore(event, preferences) {
+function eventScore(event: Event, preferences: PlanPreferences): number {
   let score = 0;
   const startsAt = new Date(event.startsAt);
   const hour = startsAt.getUTCHours();
@@ -49,7 +58,12 @@ function eventScore(event, preferences) {
   return score;
 }
 
-function buildPlan(id, mood, events, preferences) {
+function buildPlan(
+  id: string,
+  mood: string,
+  events: Event[],
+  preferences: PlanPreferences
+): Plan | null {
   const rule = MOOD_RULES[mood] || MOOD_RULES.cultural;
   const selected = events
     .filter((event) => {
@@ -64,7 +78,9 @@ function buildPlan(id, mood, events, preferences) {
     return null;
   }
 
-  const districts = [...new Set(selected.map((event) => event.venue.district).filter(Boolean))];
+  const districts = selected
+    .map((event) => event.venue.district)
+    .filter((district): district is string => Boolean(district));
   const totalKnownPrice = selected.reduce((total, event) => {
     return total + (Number(event.price.amount) || 0);
   }, 0);
@@ -84,25 +100,27 @@ function buildPlan(id, mood, events, preferences) {
   };
 }
 
-function normalizeQueryPreferences(query) {
+function normalizeQueryPreferences(query: QueryParams): PlanPreferences {
+  const categories = firstQueryValue(query.categories);
+
   return {
-    mood: query.mood,
-    when: query.when,
-    district: query.district,
-    budget: query.budget,
-    categories: query.categories
-      ? String(query.categories).split(",").map((item) => item.trim())
+    mood: firstQueryValue(query.mood),
+    when: firstQueryValue(query.when),
+    district: firstQueryValue(query.district),
+    budget: firstQueryValue(query.budget),
+    categories: categories
+      ? categories.split(",").map((item) => item.trim())
       : undefined
   };
 }
 
-export function generatePlans(allEvents, preferences) {
+export function generatePlans(allEvents: Event[], preferences: PlanPreferences): Plan[] {
   const baseEvents = filterEvents(allEvents, {
     when: preferences.when || "week",
     district: preferences.district,
     category: preferences.categories?.join(","),
     free: preferences.budget === "free" ? "true" : undefined,
-    limit: 50
+    limit: "50"
   });
 
   const moods = preferences.mood
@@ -113,11 +131,11 @@ export function generatePlans(allEvents, preferences) {
 
   return uniqueMoods
     .map((mood, index) => buildPlan(`plan_${index + 1}_${mood}`, mood, baseEvents, preferences))
-    .filter(Boolean)
+    .filter((plan): plan is Plan => Boolean(plan))
     .slice(0, 3);
 }
 
-export function createPlanService(events) {
+export function createPlanService(events: Event[]): PlanService {
   return {
     generateFromQuery(query) {
       const preferences = normalizeQueryPreferences(query);
@@ -128,7 +146,7 @@ export function createPlanService(events) {
       };
     },
 
-    generateFromBody(body = {}) {
+    generateFromBody(body: PlanPreferences = {}) {
       const preferences = body || {};
 
       return {

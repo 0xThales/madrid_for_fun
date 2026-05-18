@@ -1,12 +1,13 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
-import { getReferenceDate } from "./config/env.js";
-import { loadEvents } from "./repositories/eventsRepository.js";
-import { createApiRouter } from "./routes/apiRoutes.js";
-import { openApiSpec } from "./docs/openapi.js";
-import { createEventService } from "./services/eventService.js";
-import { createMetaService } from "./services/metaService.js";
-import { createPlanService } from "./services/planService.js";
+import { getReferenceDate } from "./config/env";
+import { openApiSpec } from "./docs/openapi";
+import { loadEvents } from "./repositories/eventsRepository";
+import { createApiRouter } from "./routes/apiRoutes";
+import { createEventService } from "./services/eventService";
+import { createMetaService } from "./services/metaService";
+import { createPlanService } from "./services/planService";
+import type { Event } from "./types";
 
 function renderDocsHtml() {
   return `<!doctype html>
@@ -30,7 +31,12 @@ function renderDocsHtml() {
 </html>`;
 }
 
-export function createApp(options = {}) {
+type CreateAppOptions = {
+  events?: Event[];
+  referenceDate?: string;
+};
+
+export function createApp(options: CreateAppOptions = {}) {
   const app = new Hono();
   const events = options.events || loadEvents();
   const referenceDate = options.referenceDate || getReferenceDate();
@@ -38,7 +44,7 @@ export function createApp(options = {}) {
   const metaService = createMetaService(events, referenceDate);
   const planService = createPlanService(events);
 
-  app.use("*", cors());
+  app.use("*", cors({ origin: "*" }));
 
   app.get("/", (context) => {
     return context.redirect("/docs");

@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
 import { describe, test } from "node:test";
-import { createApp } from "../src/app.js";
+import { createApp } from "../src/app";
 
 const app = createApp();
 
-async function request(path, options) {
+async function request(path: string, options?: RequestInit) {
   const response = await app.request(path, options);
   const body = await response.json();
 
@@ -18,6 +18,14 @@ describe("Madrid For Fun API", () => {
     assert.equal(response.status, 200);
     assert.equal(body.ok, true);
     assert.equal(body.service, "madrid-for-fun-api");
+  });
+
+  test("allows any origin with CORS headers", async () => {
+    const response = await app.request("/api/health", {
+      headers: { Origin: "https://student.example" }
+    });
+
+    assert.equal(response.headers.get("access-control-allow-origin"), "*");
   });
 
   test("returns the OpenAPI spec", async () => {

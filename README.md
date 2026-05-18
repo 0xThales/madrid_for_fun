@@ -2,7 +2,7 @@
 
 Teaching monorepo for a React bootcamp project.
 
-The backend is a ready-made Hono API with Madrid events and plan-generation
+The backend is a ready-made TypeScript/Hono API with Madrid events and plan-generation
 endpoints. The frontend is intentionally not wired to it yet, so students can
 practice implementing the API integration themselves.
 
@@ -10,7 +10,7 @@ practice implementing the API integration themselves.
 
 ```txt
 apps/
-  api/    # Hono API, Swagger/OpenAPI docs, JSON dataset, tests
+  api/    # TypeScript/Hono API, Swagger/OpenAPI docs, JSON dataset, tests
   web/    # React + Vite app shell
 ```
 

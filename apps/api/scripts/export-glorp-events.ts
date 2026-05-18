@@ -34,7 +34,32 @@ const query = `
   order by start_datetime asc
 `;
 
-function parseTags(tags) {
+type GlorpEventRow = {
+  id: number | string;
+  title: string;
+  description?: string | null;
+  category: string;
+  tags?: string | null;
+  startsAt: string;
+  endsAt?: string | null;
+  venue_name: string;
+  venue_address?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
+  district?: string | null;
+  price?: number | string | null;
+  is_free?: boolean | number;
+  price_details?: string | null;
+  image_url?: string | null;
+  source: string;
+  source_url?: string | null;
+};
+
+function parseTags(tags: string | null | undefined): string[] {
+  if (!tags) {
+    return [];
+  }
+
   try {
     const parsed = JSON.parse(tags);
     return Array.isArray(parsed) ? parsed : [];
@@ -43,7 +68,7 @@ function parseTags(tags) {
   }
 }
 
-function toApiEvent(row) {
+function toApiEvent(row: GlorpEventRow) {
   return {
     id: Number(row.id),
     title: row.title,
@@ -81,7 +106,7 @@ const json = execFileSync("sqlite3", ["-json", dbPath, query], {
   encoding: "utf8"
 });
 
-const events = JSON.parse(json).map(toApiEvent);
+const events = (JSON.parse(json) as GlorpEventRow[]).map(toApiEvent);
 
 fs.writeFileSync(
   outputPath,

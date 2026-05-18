@@ -1,6 +1,6 @@
 import { serve } from "@hono/node-server";
-import { createApp } from "./app.js";
-import { getPort } from "./config/env.js";
+import { createApp } from "./app";
+import { getPort } from "./config/env";
 
 const port = getPort();
 const app = createApp();
