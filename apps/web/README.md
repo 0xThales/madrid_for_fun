@@ -28,7 +28,7 @@ npm run dev
 
 ## API Readiness
 
-Vite proxies `/api` and `/openapi.json` to `http://localhost:4000` by default.
+Vite proxies `/api` and `/openapi.json` to `http://localhost:3001` by default.
 Run the backend with:
 
 ```bash
@@ -39,7 +39,7 @@ Do not add frontend fetches before the classroom integration step.
 
 ## Suggested Exercise Order
 
-1. Inspect `http://localhost:4000/docs`.
+1. Inspect `http://localhost:3001/docs`.
 2. Create a small API module in `src/services/`.
 3. Start with `GET /api/events?limit=6`.
 4. Add loading and error UI to `EventsPage`.

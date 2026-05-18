@@ -27,9 +27,9 @@ npm run dev
 
 Open:
 
-- API docs: http://localhost:4000/docs
-- OpenAPI JSON: http://localhost:4000/openapi.json
-- Health check: http://localhost:4000/api/health
+- API docs: http://localhost:3001/docs
+- OpenAPI JSON: http://localhost:3001/openapi.json
+- Health check: http://localhost:3001/api/health
 
 ## Backend Structure
 
@@ -64,7 +64,7 @@ npm test
 Use this to build onboarding options and filters.
 
 ```js
-const res = await fetch("http://localhost:4000/api/meta");
+const res = await fetch("http://localhost:3001/api/meta");
 const meta = await res.json();
 ```
 
@@ -93,7 +93,7 @@ GET /api/events?q=teatro
 React example:
 
 ```js
-const res = await fetch("http://localhost:4000/api/events?when=weekend&limit=6");
+const res = await fetch("http://localhost:3001/api/events?when=weekend&limit=6");
 const json = await res.json();
 setEvents(json.data);
 ```
@@ -130,7 +130,7 @@ GET /api/plans?mood=free&budget=free
 Useful after onboarding. Send preferences in the request body.
 
 ```js
-const res = await fetch("http://localhost:4000/api/plans", {
+const res = await fetch("http://localhost:3001/api/plans", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({

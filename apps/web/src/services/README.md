@@ -9,4 +9,4 @@ For the classroom exercise, students can create files here such as:
 - `plans.ts`
 
 Use the Vite proxy with relative URLs like `/api/events`, not hardcoded
-`http://localhost:4000` URLs in the frontend.
+`http://localhost:3001` URLs in the frontend.

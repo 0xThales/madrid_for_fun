@@ -6,7 +6,7 @@ export const openApiSpec = {
     description:
       "A small classroom API for React students. It serves a curated snapshot of Madrid event data adapted from Glorp Explorer."
   },
-  servers: [{ url: "http://localhost:4000" }],
+  servers: [{ url: "http://localhost:3001" }],
   paths: {
     "/api/health": {
       get: {

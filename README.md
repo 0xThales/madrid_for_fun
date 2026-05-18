@@ -25,9 +25,9 @@ npm run check
 
 API docs:
 
-- `http://localhost:4000/docs`
-- `http://localhost:4000/openapi.json`
-- `http://localhost:4000/api/health`
+- `http://localhost:3001/docs`
+- `http://localhost:3001/openapi.json`
+- `http://localhost:3001/api/health`
 
 Frontend dev server:
 
@@ -35,7 +35,7 @@ Frontend dev server:
 
 During class, use `npm run dev` from the repo root. It starts both:
 
-- API: `http://localhost:4000`
+- API: `http://localhost:3001`
 - Web: `http://localhost:5173`
 
 You can still run them separately with `npm run dev:api` and `npm run dev:web`
@@ -44,7 +44,7 @@ if you want two terminals.
 ## Frontend/API Boundary
 
 The web app has a Vite dev proxy for `/api` and `/openapi.json`, pointing to
-`http://localhost:4000` by default. That means a future frontend service can use
+`http://localhost:3001` by default. That means a future frontend service can use
 relative URLs like `/api/events`.
 
 No frontend API client, fetch wrapper, React hook, or page-level fetch has been
@@ -56,7 +56,7 @@ When you are ready to teach the FE-BE connection, the intended path is:
 
 1. Run the project with `npm run dev`.
 2. Open the web app at `http://localhost:5173`.
-3. Open `http://localhost:4000/docs` to inspect the API.
+3. Open `http://localhost:3001/docs` to inspect the API.
 4. Create a frontend service file inside `apps/web/src/services/`.
 5. Use relative URLs from the web app, for example `/api/events?limit=6`.
 6. Replace the placeholder pages with loading, error, empty, and success states.
