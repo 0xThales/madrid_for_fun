@@ -151,28 +151,28 @@ setPlans(json.data);
 
 ```ts
 {
-  id: 135,
-  title: "Cinefórum Esqueria...",
+  id: 66995,
+  title: "El diablo viste de Prada 2",
   description: "Text or null",
-  category: "music",
-  tags: ["gratis"],
-  startsAt: "2026-05-13T16:00:00.000Z",
-  endsAt: "2026-05-13T21:59:00.000Z",
+  category: "cinema",
+  tags: ["comedia"],
+  startsAt: "2026-05-18T13:45:00.000Z",
+  endsAt: null,
   venue: {
-    name: "Biblioteca Pública Municipal Iván de Vargas",
-    address: "CALLE SAN JUSTO 5",
-    district: "Centro",
-    latitude: 40.4141,
-    longitude: -3.7098
+    name: "Renoir Retiro",
+    address: null,
+    district: null,
+    latitude: null,
+    longitude: null
   },
   price: {
     amount: null,
-    isFree: true,
-    details: null
+    isFree: false,
+    details: "Sesiones: 15:45, 18:00, 20:15, 22:30"
   },
-  imageUrl: null,
+  imageUrl: "https://...",
   source: {
-    name: "datos_madrid",
+    name: "ecartelera",
     url: "https://..."
   }
 }
@@ -182,27 +182,29 @@ setPlans(json.data);
 
 The committed dataset lives in `data/events.json`.
 
-The API uses `2026-05-13` as its default teaching reference date, so filters like `when=today` and `when=weekend` keep working with this frozen dataset. You can override it while running the server:
+The API uses `2026-05-18` as its default teaching reference date, so filters like `when=today` and `when=weekend` keep working with this frozen dataset. You can override it while running the server:
 
 ```bash
-MFF_TODAY=2026-05-16 npm run dev
+MFF_TODAY=2026-05-20 npm run dev
 ```
 
-To regenerate it from the local Glorp SQLite database:
+To regenerate it from Glorp:
 
 ```bash
 npm run export:glorp
 ```
 
-By default the script reads:
+By default, the script loads Glorp's local `.env`, uses `TURSO_DATABASE_URL` / `TURSO_AUTH_TOKEN` when present, and falls back to:
 
 ```txt
 /Users/dan/Desktop/me/glorp_explorer/local.db
 ```
 
-You can override that:
+The default export keeps future primary events with `quality_score >= 3`. Useful overrides:
 
 ```bash
+GLORP_FROM_DATE=2026-05-18 npm run export:glorp
+GLORP_MIN_QUALITY_SCORE=0 npm run export:glorp
 GLORP_DB_PATH=/path/to/local.db npm run export:glorp
 ```
 

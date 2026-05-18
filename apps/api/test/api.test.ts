@@ -41,7 +41,7 @@ describe("Madrid For Fun API", () => {
 
     assert.equal(response.status, 200);
     assert.equal(body.name, "Madrid For Fun API");
-    assert.equal(body.referenceDate, "2026-05-13");
+    assert.equal(body.referenceDate, "2026-05-18");
     assert.ok(body.totalEvents > 0);
     assert.ok(body.categories.length > 0);
     assert.ok(body.districts.length > 0);

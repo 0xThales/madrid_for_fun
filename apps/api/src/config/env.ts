@@ -1,5 +1,5 @@
 export const DEFAULT_PORT = 3001;
-export const DEFAULT_REFERENCE_DATE = "2026-05-13";
+export const DEFAULT_REFERENCE_DATE = "2026-05-18";
 
 export function getPort() {
   return Number(process.env.PORT) || DEFAULT_PORT;
